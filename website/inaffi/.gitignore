@@ -1,0 +1,22 @@
+# ============================================================
+# inaffi.com — Git Ignore
+# ============================================================
+
+# ── Never commit these ───────────────────────────────────────
+
+# Config file with real DB credentials
+includes/config.php
+
+# User-uploaded images (backed up by Hostinger)
+uploads/
+
+# Environment files
+.env
+.env.local
+
+# ── OS / Editor junk ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/

@@ -1,0 +1,87 @@
+# ============================================================
+# inaffi.com — Apache URL Rewriting & Security Rules
+# ============================================================
+# Requires: mod_rewrite enabled on Hostinger
+# Enable via: hPanel → Advanced → PHP Configuration → mod_rewrite
+
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+
+# ── Security: Block direct access to sensitive dirs ──────────
+RewriteRule ^includes/         - [F,L]
+RewriteRule ^docs/             - [F,L]
+
+# ── Security: No PHP execution in uploads/ ───────────────────
+RewriteRule ^uploads/.*\.php$  - [F,L]
+
+# ── Force HTTPS ──────────────────────────────────────────────
+# Uncomment after confirming SSL is working on Hostinger:
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# ── Remove www (optional — pick one and stick with it) ───────
+# Uncomment to redirect www → non-www:
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ── Route static files directly (skip PHP routing) ───────────
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ── Clean URL routes ─────────────────────────────────────────
+
+# Auth pages
+RewriteRule ^login/?$       login.php    [L,QSA]
+RewriteRule ^signup/?$      signup.php   [L,QSA]
+RewriteRule ^logout/?$      logout.php   [L,QSA]
+
+# Legal pages
+RewriteRule ^privacy/?$     privacy.php     [L,QSA]
+RewriteRule ^terms/?$       terms.php       [L,QSA]
+RewriteRule ^disclosure/?$  disclosure.php  [L,QSA]
+
+# Click tracker
+RewriteRule ^go/?$          go.php      [L,QSA]
+
+# Dashboard routes — must come BEFORE the username catch-all
+RewriteRule ^dashboard/?$                    dashboard/index.php       [L,QSA]
+RewriteRule ^dashboard/new-outfit/?$         dashboard/new-outfit.php  [L,QSA]
+RewriteRule ^dashboard/edit-outfit/?$        dashboard/edit-outfit.php [L,QSA]
+RewriteRule ^dashboard/settings/?$           dashboard/settings.php    [L,QSA]
+
+# Admin
+RewriteRule ^admin/?$                        admin/index.php           [L,QSA]
+
+# AJAX endpoints
+RewriteRule ^ajax/toggle-stock/?$            ajax/toggle-stock.php     [L,QSA]
+RewriteRule ^ajax/toggle-publish/?$          ajax/toggle-publish.php   [L,QSA]
+RewriteRule ^ajax/toggle-featured/?$         ajax/toggle-featured.php  [L,QSA]
+
+# ── Username catch-all (MUST be last) ────────────────────────
+# Matches /username or /@username → storefront
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^@?([a-zA-Z0-9_]{3,30})/?$ storefront.php?username=$1 [L,QSA]
+
+# ── Custom error pages ────────────────────────────────────────
+ErrorDocument 404 /404.php
+ErrorDocument 403 /404.php
+
+# ── Security headers ─────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ── Cache static assets ───────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg  "access plus 1 month"
+    ExpiresByType image/png   "access plus 1 month"
+    ExpiresByType image/webp  "access plus 1 month"
+    ExpiresByType text/css    "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
