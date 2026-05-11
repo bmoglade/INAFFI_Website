@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// inaffi.com — Site Footer
+// inaffi.com — Site Footer — matches WT Footer.tsx
 // ============================================================
 // Closes <main>, outputs footer, closes </body></html>
 // Include analytics snippet (GA4) if configured
@@ -10,27 +10,28 @@
 </main><!-- /main -->
 
 <footer class="site-footer">
-    <div class="container">
-        <div>
-            <span class="site-footer__brand"><?= e(SITE_NAME) ?></span>
-            <p class="text-sm text-secondary mt-sm" style="color:rgba(255,255,255,0.5)">
-                <?= e(SITE_TAGLINE) ?>
-            </p>
-        </div>
+    <div class="container-content">
 
+        <div class="site-footer__inner">
+            <!-- Brand -->
+            <div>
+                <span class="site-footer__brand-name"><?= e(SITE_NAME) ?></span>
+                <p class="site-footer__tagline"><?= e(SITE_TAGLINE) ?></p>
+            </div>
+
+            <!-- Links -->
         <nav class="site-footer__links" aria-label="Footer navigation">
-            <a href="<?= site_url('privacy') ?>">Privacy Policy</a>
-            <a href="<?= site_url('terms') ?>">Terms of Service</a>
-            <a href="<?= site_url('disclosure') ?>">Affiliate Disclosure</a>
-            <a href="<?= site_url('login') ?>">Creator Login</a>
+                <a href="<?= site_url('privacy') ?>">Privacy</a>
+                <a href="<?= site_url('terms') ?>">Terms</a>
+                <a href="<?= site_url('disclosure') ?>">Disclosure</a>
         </nav>
     </div>
 
-    <div class="container">
-        <p class="site-footer__copy">
+        <!-- Copyright -->
+        <div class="site-footer__copy">
             &copy; <?= date('Y') ?> <?= e(SITE_NAME) ?>. All rights reserved.
-            Affiliate links on this platform earn commissions that support creators directly.
-        </p>
+        </div>
+
     </div>
 </footer>
 
@@ -45,3 +46,4 @@ render_analytics();
 
 </body>
 </html>
+

@@ -1,6 +1,8 @@
 <?php
 // ============================================================
-// inaffi.com — Site Header (session-aware)
+// inaffi.com — Site Header
+// Matches WT reference: dark surface bg, gold logo left,
+// text "Log in" + gold-outline "Join as Creator" right
 // ============================================================
 // Variables expected from the including page:
 //   $title    (string) — <title> tag content
@@ -13,12 +15,9 @@
 if (!isset($title))   $title   = SITE_NAME;
 if (!isset($creator)) $creator = is_logged_in() ? get_current_creator() : null;
 
-// Is the current page the storefront (no dashboard link in header)?
 $req          = rtrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
-$is_homepage  = in_array($req, ['', '/website/inaffi', '/website/inaffi/index.php']);
 $is_dashboard = str_contains($req, '/dashboard');
 $is_admin     = str_contains($req, '/admin');
-$dark_header  = $is_homepage; // dark nav on homepage only
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +32,7 @@ $dark_header  = $is_homepage; // dark nav on homepage only
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="<?= site_url('assets/css/styles.css') ?>">
@@ -43,46 +42,37 @@ $dark_header  = $is_homepage; // dark nav on homepage only
 
     <?php if (isset($extra_head)) echo $extra_head; ?>
 </head>
-<body class="<?= $is_homepage ? 'page-home' : '' ?>">
+<body>
 <?php render_flash(); ?>
 
-<header class="site-header <?= $dark_header ? 'site-header--dark' : '' ?>">
-    <div class="container">
+<header class="site-header">
+    <div class="container-content header-inner">
 
-        <!-- Left nav -->
-        <nav class="site-header__nav-left" aria-label="Left navigation">
-            <?php if (!$is_dashboard && !$is_admin): ?>
-                <a href="<?= site_url('#about') ?>">About us</a>
-                <span class="nav-divider">|</span>
-                <a href="<?= site_url('signup') ?>">Creators</a>
-            <?php endif; ?>
-        </nav>
-
-        <!-- Centre: Logo -->
+        <!-- Logo / Brand — gold, display font, left -->
         <a href="<?= site_url() ?>" class="site-header__logo">
-            <?php
-            $logo_file = rtrim(dirname(__DIR__), '/') . '/assets/images/logo.png';
-            if (file_exists($logo_file)): ?>
-                <img src="<?= e(site_url('assets/images/logo.png')) ?>"
-                     alt="<?= e(SITE_NAME) ?>"
-                     class="site-header__logo-img">
-            <?php else: ?>
-                <span class="site-header__logo-text"><?= e(strtoupper(SITE_NAME)) ?></span>
-            <?php endif; ?>
+            <?= e(strtoupper(SITE_NAME)) ?>
         </a>
 
-        <!-- Right nav — changes based on login state -->
-        <nav class="site-header__nav-right" aria-label="Right navigation">
+        <!-- Nav -->
+        <nav class="site-header__nav">
             <?php if ($creator): ?>
                 <!-- Logged in -->
                 <?php if (!$is_dashboard && !$is_admin): ?>
-                    <a href="<?= site_url('dashboard') ?>" class="btn btn--outline-light btn--sm">Dashboard</a>
+                    <a href="<?= site_url('dashboard') ?>" class="nav-text-link">
+                        ← Dashboard
+                    </a>
                 <?php endif; ?>
-                <a href="<?= site_url('logout') ?>" class="nav-link-light">Log out</a>
+                <a href="<?= site_url('logout') ?>" class="nav-text-link nav-text-link--danger">
+                    Log Out
+                </a>
             <?php else: ?>
                 <!-- Logged out -->
-                <a href="<?= site_url('signup') ?>" class="btn btn--outline-light btn--sm">Join as creator</a>
-                <a href="<?= site_url('login') ?>" class="nav-link-light">Log in</a>
+                <a href="<?= site_url('login') ?>" class="nav-text-link">
+                    Log in
+                </a>
+                <a href="<?= site_url('signup') ?>" class="btn btn--gold-outline">
+                    Join as Creator
+                </a>
             <?php endif; ?>
         </nav>
 

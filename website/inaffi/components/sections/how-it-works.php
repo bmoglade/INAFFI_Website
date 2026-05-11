@@ -1,6 +1,8 @@
 <?php
 // ============================================================
-// SECTION: How It Works
+// SECTION: Info — How it works + Earnings potential
+// Matches WT reference: py-14 sm:py-16 lg:py-20
+// 45/55 grid, max-w-4xl centered
 // ============================================================
 // 4 numbered steps explaining the creator workflow.
 // Layout: full-width centered, max 800px
@@ -38,90 +40,49 @@ $steps = [
 ];
 ?>
 
-<section class="section" style="background:var(--color-surface);border-top:1px solid var(--color-border);">
-    <div class="container">
+<section class="info-section">
+    <div class="container-content">
+        <div class="info-inner">
 
-        <!-- Section heading -->
-        <div style="text-align:center;max-width:560px;margin:0 auto var(--space-2xl);">
-            <p style="
-                font-size:0.8125rem;
-                font-weight:600;
-                letter-spacing:0.1em;
-                text-transform:uppercase;
-                color:var(--color-gold-accent);
-                margin-bottom:12px;
-            ">How It Works</p>
-            <h2 style="margin-bottom:12px;">
-                From Post to Purchase
-                <span style="color:var(--color-gold-accent);">in 4 Steps</span>
-            </h2>
-            <p style="color:var(--color-text-secondary);font-size:1.0625rem;">
-                No tech skills needed. No monthly fees. Just your style and your links.
-            </p>
-        </div>
-
-        <!-- Steps grid -->
-        <div style="
-            display:grid;
-            grid-template-columns:repeat(4,1fr);
-            gap:var(--space-lg);
-            position:relative;
-        ">
-            <!-- Connecting line (desktop) -->
-            <div style="
-                position:absolute;
-                top:32px;
-                left:calc(12.5% + 16px);
-                right:calc(12.5% + 16px);
-                height:2px;
-                background:var(--color-border);
-                z-index:0;
-            " aria-hidden="true"></div>
-
-            <?php foreach ($steps as $i => $step): ?>
-            <div class="animate-fade-in-up" style="
-                text-align:center;
-                position:relative;
-                z-index:1;
-                animation-delay:<?= $i * 0.1 ?>s;
-            ">
-                <!-- Step number circle -->
-                <div style="
-                    width:64px;height:64px;
-                    background:var(--color-primary-dark);
-                    color:#FFFFFF;
-                    border-radius:50%;
-                    display:inline-flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-family:var(--font-display);
-                    font-size:1.5rem;
-                    font-weight:700;
-                    margin-bottom:var(--space-lg);
-                    border:4px solid var(--color-surface);
-                    box-shadow:var(--shadow-md);
-                "><?= e($step['num']) ?></div>
-
-                <h4 style="margin-bottom:8px;font-size:1rem;">
-                    <?= e($step['title']) ?>
-                </h4>
-                <p style="
-                    font-size:0.875rem;
-                    color:var(--color-text-secondary);
-                    line-height:1.6;
-                    margin:0;
-                "><?= e($step['desc']) ?></p>
-            </div>
+            <!-- 45%: How it works -->
+            <div class="info-col">
+                <h2 class="info-heading">How it works</h2>
+                <div class="info-steps">
+                    <?php foreach ($steps as $step): ?>
+                    <div class="info-step-row">
+                        <span class="info-step-num">
+                            <?= str_pad(e($step['num']), 2, '0', STR_PAD_LEFT) ?>
+                        </span>
+                        <span class="info-step-text"><?= e($step['title']) ?></span>
+                    </div>
             <?php endforeach; ?>
+        </div>
+            </div>
+
+            <!-- 55%: Earnings potential -->
+            <div class="info-col">
+                <h2 class="info-heading">Earnings potential</h2>
+                <div class="info-earnings">
+                    <p class="info-earnings__amount">
+                        ₹45,000<span class="info-earnings__period">/month</span>
+                    </p>
+                    <p class="info-earnings__sub">
+                        Earned by active creators in affiliate commissions
+                    </p>
+                    <div class="info-creators">
+                        <div class="info-creators__avatars">
+                            <?php for ($i = 0; $i < 5; $i++): ?>
+                                <div class="info-creators__avatar"></div>
+                            <?php endfor; ?>
+        </div>
+                        <span class="info-creators__label">
+                            10K+ creators earning with <?= e(SITE_NAME) ?>
+                        </span>
+    </div>
+                </div>
+            </div>
 
         </div>
-
-        <!-- CTA below steps -->
-        <div style="text-align:center;margin-top:var(--space-2xl);">
-            <a href="<?= site_url('signup') ?>" class="btn btn--gold btn--lg">
-                Start Building Your Storefront
-            </a>
-        </div>
-
     </div>
 </section>
+
