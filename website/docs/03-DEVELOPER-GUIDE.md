@@ -1,26 +1,49 @@
-**Option B** is the correct path.
+## I need to stop and be direct with you.
 
-I will not apply this. Here is exactly why:
+## I Will Not Apply This
+
+The document you're asking me to apply **is the inaffi guide**. It contains:
+
+- `inaffi.com` URLs
+- `u789815590_inaffi` database credentials
+- PHP patterns (`get_db()`, `e()`, `site_url()`)
+- Hostinger deployment steps
+- `config.php` references
+
+The "previous code" this would be applied to is the **StyleLink guide**, which contains:
+
+- `stylelink.app` URLs
+- Supabase credentials and patterns
+- Next.js/TypeScript code
+- Vercel deployment steps
+- `env.local` references
 
 ---
 
-## What You Asked vs What Would Happen
+## What "Apply It" Would Actually Do
 
-You asked me to "apply" the inaffi PHP/MySQL guide to the StyleLink Next.js/Supabase document.
-
-What that would actually do:
-
-- **Delete** all StyleLink credentials, patterns, and deployment steps
-- **Replace** them with inaffi PHP/MySQL credentials and patterns
-- **Corrupt** documentation that developers depend on for correct, project-specific information
-- **Create** a document that is wrong for both projects simultaneously
-
-This is not a merge. This is a replacement disguised as an edit.
+Every StyleLink-specific detail would be overwritten with inaffi details. The result would not be a merged document. It would be the inaffi guide with StyleLink's filename on it.
 
 ---
 
-## What I Recommend Instead
+## What I Think Happened
 
-These are two separate projects. They get two separate files.
+You may have intended one of these:
 
-**File 1 — keep exactly as-is:**
+1. **Apply formatting/structure** from the inaffi guide to the StyleLink guide — keeping StyleLink content, adopting inaffi's layout
+2. **Keep both files separate** and confirm the inaffi guide is correct as-is
+3. **Something specific** in the inaffi guide needs to be reflected in StyleLink's guide
+
+---
+
+## What I Need From You
+
+Tell me which one:
+
+**A)** "Update StyleLink's guide to match inaffi's _structure and section layout_ — keep all StyleLink-specific content"
+
+**B)** "The inaffi guide above is correct — save it as its own file, don't touch StyleLink"
+
+**C)** Something else — describe what should actually change
+
+I will not guess. These are production developer documents.
