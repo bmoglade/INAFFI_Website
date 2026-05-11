@@ -105,11 +105,12 @@ require_once '../components/header.php';
 require_once '../components/dashboard-sidebar.php';
 ?>
 
+<!-- Mobile bar must be OUTSIDE dashboard-layout -->
 <div class="dashboard-layout">
     <div class="dashboard-main">
 
         <h1 class="dashboard-page-title">
-            Admin Panel
+            ⚙️ Admin Panel
             <span style="font-size:0.875rem;font-weight:400;color:var(--color-text-secondary);">
                 — Site owner settings
             </span>
@@ -123,11 +124,13 @@ require_once '../components/dashboard-sidebar.php';
             </div>
         <?php endif; ?>
 
+        <!-- ── Section: Site Identity ──────────────────────── -->
+        <div class="admin-section-label">SITE SETTINGS</div>
         <div class="admin-grid">
 
             <!-- ── Site Identity ──────────────────────────── -->
             <div class="admin-card">
-                <h2 class="admin-card__title">Site Identity</h2>
+                <h2 class="admin-card__title">🏷️ Site Identity</h2>
                 <form method="POST">
                     <input type="hidden" name="csrf_token" value="<?= e($csrf) ?>">
                     <input type="hidden" name="action" value="identity">
@@ -151,12 +154,11 @@ require_once '../components/dashboard-sidebar.php';
                     <button type="submit" class="btn btn--primary">Save Identity</button>
                 </form>
             </div>
-
             <!-- ── Color Theme ────────────────────────────── -->
             <div class="admin-card">
-                <h2 class="admin-card__title">Color Theme</h2>
+                <h2 class="admin-card__title">🎨 Color Theme</h2>
                 <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
-                    Changes apply site-wide instantly. Colors update as you pick.
+                    Pick colors — preview updates live. Click Save to apply site-wide.
                 </p>
                 <form method="POST">
                     <input type="hidden" name="csrf_token" value="<?= e($csrf) ?>">
@@ -164,15 +166,15 @@ require_once '../components/dashboard-sidebar.php';
 
                     <?php
                     $color_labels = [
-                        '--color-background'   => 'Page Background',
-                        '--color-surface'      => 'Card / Panel',
-                        '--color-primary-dark' => 'Primary Dark (buttons)',
-                        '--color-gold-accent'  => 'Gold Accent (CTA)',
-                        '--color-text-primary' => 'Text Primary',
+                        '--color-background'    => 'Page Background',
+                        '--color-surface'       => 'Card / Panel',
+                        '--color-primary-dark'  => 'Primary Dark (buttons)',
+                        '--color-gold-accent'   => 'Gold Accent (CTA)',
+                        '--color-text-primary'  => 'Text Primary',
                         '--color-text-secondary'=> 'Text Secondary',
-                        '--color-border'       => 'Border / Divider',
-                        '--color-shop-btn-bg'  => 'Shop Button Background',
-                        '--color-shop-btn-text'=> 'Shop Button Text',
+                        '--color-border'        => 'Border / Divider',
+                        '--color-shop-btn-bg'   => 'Shop Button Background',
+                        '--color-shop-btn-text' => 'Shop Button Text',
                     ];
                     foreach ($color_labels as $var => $label):
                         $val     = $current_colors[$var] ?? '#000000';
@@ -180,13 +182,16 @@ require_once '../components/dashboard-sidebar.php';
                     ?>
                     <div class="color-picker-row">
                         <label for="color_<?= e($key) ?>"><?= e($label) ?></label>
-                        <input
-                            type="color"
-                            id="color_<?= e($key) ?>"
-                            name="color_<?= e($key) ?>"
-                            value="<?= e($val) ?>"
-                            data-color-var="<?= e($var) ?>"
-                        >
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="color-preview" style="display:inline-block;width:24px;height:24px;border-radius:4px;border:1px solid var(--color-border);background:<?= e($val) ?>;"></span>
+                            <input
+                                type="color"
+                                id="color_<?= e($key) ?>"
+                                name="color_<?= e($key) ?>"
+                                value="<?= e($val) ?>"
+                                data-color-var="<?= e($var) ?>"
+                            >
+                        </div>
                     </div>
                     <?php endforeach; ?>
 
@@ -195,10 +200,15 @@ require_once '../components/dashboard-sidebar.php';
                     </button>
                 </form>
             </div>
+        </div><!-- /admin-grid -->
+
+        <!-- ── Section: Content ────────────────────────────── -->
+        <div class="admin-section-label" style="margin-top:var(--space-xl);">CONTENT</div>
+        <div class="admin-grid">
 
             <!-- ── Categories ────────────────────────────── -->
             <div class="admin-card">
-                <h2 class="admin-card__title">Categories</h2>
+                <h2 class="admin-card__title">📂 Categories</h2>
                 <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
                     These appear in outfit dropdowns and storefront filter pills.
                 </p>
@@ -240,77 +250,98 @@ require_once '../components/dashboard-sidebar.php';
 
             <!-- ── Platforms Info ─────────────────────────── -->
             <div class="admin-card">
-                <h2 class="admin-card__title">Platforms</h2>
+                <h2 class="admin-card__title">🛍️ Platforms</h2>
                 <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
-                    Current platforms configured. To add or remove platforms,
-                    edit <code style="background:var(--color-background);padding:2px 6px;border-radius:3px;">includes/config.php</code>
-                    and upload logo PNGs to
-                    <code style="background:var(--color-background);padding:2px 6px;border-radius:3px;">assets/images/platforms/</code>.
+                    Current platforms. To add/remove, edit
+                    <code style="background:var(--color-background);padding:2px 6px;border-radius:3px;font-size:0.8125rem;">includes/config.php</code>
+                    and upload logos to
+                    <code style="background:var(--color-background);padding:2px 6px;border-radius:3px;font-size:0.8125rem;">assets/images/platforms/</code>
                 </p>
-                <div class="tag-list">
-                    <?php foreach ($PLATFORMS as $p): ?>
-                        <?php
+                <div class="tag-list" style="gap:8px;">
+                    <?php foreach ($PLATFORMS as $p):
                         $colors = $PLATFORM_COLORS[$p] ?? ['#666','#fff'];
-                        ?>
-                        <span class="badge" style="background:<?= e($colors[0]) ?>;color:<?= e($colors[1]) ?>;">
+                    ?>
+                        <span class="badge" style="
+                            background:<?= e($colors[0]) ?>;
+                            color:<?= e($colors[1]) ?>;
+                            padding:5px 12px;
+                            font-size:0.8125rem;
+                            border-radius:4px;
+                        ">
                             <?= e($p) ?>
                         </span>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <!-- ── Featured Outfit ───────────────────────── -->
-            <div class="admin-card" style="grid-column:1/-1;">
-                <h2 class="admin-card__title">Homepage Featured Outfit</h2>
-                <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
-                    To change the featured outfit on the homepage, go to
-                    <a href="<?= site_url('dashboard') ?>" style="color:var(--color-gold-accent);">Dashboard</a>
-                    → find the outfit → click ⭐ Feature.
-                    Only one outfit can be featured at a time.
-                </p>
-
-                <?php
-                // Show currently featured outfit
-                $stmt = get_db()->prepare('
-                    SELECT o.title, o.category, c.display_name, c.username
-                    FROM outfits o JOIN creators c ON c.id = o.creator_id
-                    WHERE o.is_featured = 1 LIMIT 1
-                ');
-                $stmt->execute();
-                $featured = $stmt->fetch();
-                ?>
-
-                <?php if ($featured): ?>
-                    <div style="
-                        display:flex;align-items:center;gap:var(--space-md);
-                        padding:var(--space-md);
-                        background:var(--color-background);
-                        border:1px solid var(--color-border);
-                        border-radius:var(--radius-sm);
-                    ">
-                        <span style="font-size:1.5rem;">⭐</span>
-                        <div>
-                            <p style="font-weight:600;margin-bottom:2px;">
-                                <?= e($featured['title']) ?>
-                            </p>
-                            <p style="font-size:0.875rem;color:var(--color-text-secondary);">
-                                <?= e($featured['category']) ?>
-                                by <?= e($featured['display_name']) ?>
-                                (@<?= e($featured['username']) ?>)
-                            </p>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <p style="color:var(--color-text-secondary);">
-                        No outfit is currently featured. Go to Dashboard and click ⭐ on any outfit.
-                    </p>
-                <?php endif; ?>
-            </div>
-
         </div><!-- /admin-grid -->
 
-    </div>
-</div>
+        <!-- ── Section: Homepage ───────────────────────────── -->
+        <div class="admin-section-label" style="margin-top:var(--space-xl);">HOMEPAGE</div>
+
+        <!-- ── Featured Outfit ───────────────────────── -->
+        <div class="admin-card" style="margin-bottom:var(--space-xl);">
+            <h2 class="admin-card__title">⭐ Featured Outfit on Homepage</h2>
+            <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--space-md);">
+                Go to <a href="<?= site_url('dashboard') ?>" style="color:var(--color-gold-accent);font-weight:500;">Dashboard</a>
+                → find any outfit → click <strong>⭐ Feature</strong> to display it on the homepage.
+                Only one outfit can be featured at a time.
+            </p>
+
+            <?php
+            // Show currently featured outfit
+            $stmt = get_db()->prepare('
+                SELECT o.title, o.category, c.display_name, c.username
+                FROM outfits o JOIN creators c ON c.id = o.creator_id
+                WHERE o.is_featured = 1 LIMIT 1
+            ');
+            $stmt->execute();
+            $featured = $stmt->fetch();
+            ?>
+
+            <?php if ($featured): ?>
+                <div style="
+                    display:flex;align-items:center;gap:var(--space-md);
+                    padding:var(--space-md);
+                    background:var(--color-background);
+                    border:2px solid var(--color-gold-accent);
+                    border-radius:var(--radius-sm);
+                ">
+                    <span style="font-size:2rem;">⭐</span>
+                    <div>
+                        <p style="font-weight:600;margin-bottom:2px;font-size:1rem;">
+                            <?= e($featured['title']) ?>
+                        </p>
+                        <p style="font-size:0.875rem;color:var(--color-text-secondary);margin:0;">
+                            <?= e($featured['category']) ?> &middot;
+                            by <strong><?= e($featured['display_name']) ?></strong>
+                            (@<?= e($featured['username']) ?>)
+                        </p>
+                    </div>
+                    <a href="<?= site_url('dashboard') ?>" class="btn btn--outline btn--sm" style="margin-left:auto;">
+                        Change
+                    </a>
+                </div>
+            <?php else: ?>
+                <div style="
+                    padding:var(--space-lg);
+                    background:var(--color-background);
+                    border:2px dashed var(--color-border);
+                    border-radius:var(--radius-sm);
+                    text-align:center;
+                    color:var(--color-text-secondary);
+                ">
+                    <p style="font-size:2rem;margin-bottom:8px;">🚫</p>
+                    <p style="margin:0;">No outfit is currently featured.</p>
+                    <a href="<?= site_url('dashboard') ?>" class="btn btn--primary btn--sm" style="margin-top:12px;">
+                        Go to Dashboard → Feature an Outfit
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+
+    </div><!-- /dashboard-main -->
+</div><!-- /dashboard-layout -->
 
 <?php require_once '../components/footer.php'; ?>
 
@@ -331,16 +362,15 @@ function update_config_constant(string $name, string $value): void {
 function update_config_array(string $name, array $values, string $file): void {
     $content = file_get_contents($file);
     $lines   = array_map(fn($v) => "    '" . addslashes($v) . "',", $values);
-    $block   = "\$" . strtoupper(substr($name, 1))
-        . " = [\n" . implode("\n", $lines) . "\n];\n";
+    $block   = "\$" . $name . " = [\n" . implode("\n", $lines) . "\n];\n";
 
     // Replace the existing array
-    $varName = '$' . $name;
     $content = preg_replace(
-        '/\\\$' . preg_quote($name, '/') . '\s*=\s*\[[^\]]*\]\s*;/s',
+        '/\$' . preg_quote($name, '/') . '\s*=\s*\[[^\]]*\]\s*;/s',
         $block,
         $content
     );
     file_put_contents($file, $content);
 }
 ?>
+

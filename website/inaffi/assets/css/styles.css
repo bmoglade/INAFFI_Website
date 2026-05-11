@@ -1615,10 +1615,23 @@ p:last-child { margin-bottom: 0; }
 /* ============================================================
    22. ADMIN PANEL
    ============================================================ */
+
+.admin-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
 .admin-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-xl);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .admin-card {
@@ -1626,14 +1639,17 @@ p:last-child { margin-bottom: 0; }
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
 }
 
 .admin-card__title {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: var(--space-lg);
   padding-bottom: var(--space-md);
   border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
 }
 
 /* Color picker row */
