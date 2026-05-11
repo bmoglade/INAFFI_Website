@@ -109,7 +109,8 @@ function save_image(array $file, string $folder): ?string {
     // Random hash — never expose original filename (security)
     $filename  = bin2hex(random_bytes(8)) . '.jpg';  // always save as JPEG
     $rel_path  = 'uploads/' . $folder . '/' . $filename;
-    $full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $rel_path;
+    $app_root  = dirname(__DIR__);  // always resolves to the inaffi/ folder regardless of deploy path
+    $full_path = $app_root . '/' . $rel_path;
 
     // ── Ensure Directory Exists ───────────────────────────────
     $dir = dirname($full_path);
@@ -142,7 +143,8 @@ function delete_image(?string $rel_path): void {
     // Safety: only delete files inside uploads/ directory
     if (!str_starts_with($rel_path, 'uploads/')) return;
 
-    $full_path = $_SERVER['DOCUMENT_ROOT'] . '/' . $rel_path;
+    $app_root  = dirname(__DIR__);
+    $full_path = $app_root . '/' . $rel_path;
     if (is_file($full_path)) {
         @unlink($full_path);
     }

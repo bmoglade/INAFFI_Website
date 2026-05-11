@@ -114,10 +114,12 @@ function platform_badge_style(string $platform): string {
 function platform_logo_url(string $platform): string {
     global $PLATFORM_LOGOS;
     if (!isset($PLATFORM_LOGOS[$platform])) return '';
-    $path = '/assets/images/platforms/' . $PLATFORM_LOGOS[$platform];
-    // Return only if file exists on disk
-    $file = $_SERVER['DOCUMENT_ROOT'] . $path;
-    return file_exists($file) ? $path : '';
+    $filename = $PLATFORM_LOGOS[$platform];
+    $rel_path = 'assets/images/platforms/' . $filename;
+    // Resolve disk path relative to the inaffi/ app root (works regardless of deploy path)
+    $app_root = rtrim(dirname(__DIR__), '/');  // inaffi/includes/.. = inaffi/
+    $full     = $app_root . '/' . $rel_path;
+    return file_exists($full) ? site_url($rel_path) : '';
 }
 
 /**

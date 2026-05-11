@@ -6,7 +6,7 @@
 
 Options -Indexes
 RewriteEngine On
-RewriteBase /
+RewriteBase /website/inaffi/
 
 # ── Security: Block direct access to sensitive dirs ──────────
 RewriteRule ^includes/         - [F,L]
@@ -66,8 +66,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^@?([a-zA-Z0-9_]{3,30})/?$ storefront.php?username=$1 [L,QSA]
 
 # ── Custom error pages ────────────────────────────────────────
-ErrorDocument 404 /404.php
-ErrorDocument 403 /404.php
+ErrorDocument 404 /website/inaffi/404.php
+ErrorDocument 403 /website/inaffi/404.php
 
 # ── Security headers ─────────────────────────────────────────
 <IfModule mod_headers.c>
