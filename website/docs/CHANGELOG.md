@@ -5,6 +5,81 @@
 
 ---
 
+## [1.2.0] - 2026-05-11 - Full Documentation Overhaul (WT v1 Aligned)
+
+### Summary
+
+Comprehensive documentation update to reflect the correct WT reference branch (`v1`, not `master`) and fully document all current and pending PHP features.
+
+### Critical Correction: WT Reference Branch
+
+- **Previous docs referenced `wt/master`** — this was wrong. `master` is the old v0.5.1 with outdated values.
+- **All docs now reference `wt/v1`** — the correct redesign branch with the luxury dark theme.
+- Fixed all gold color references: `#C9A96E` (v1) not `#D6B25E` (master)
+- Fixed all background references: `#0A0C14` (v1) not `#0B0B0F` (master)
+
+### Documentation Files Updated
+
+#### `00-SESSION-START-PROMPT.md` — Full rewrite
+
+- Corrected WT branch to `v1` with explicit warning about `master` being wrong
+- Added table of exact design token values (gold, backgrounds, text, borders)
+- Added key WT v1 file → `git show` command reference table
+- Added current build status (✅ done / ❌ pending)
+- Added session rules (7 rules to follow each session)
+- Added example session prompts for next build tasks
+
+#### `01-MASTER-PROMPT.md` — Full rewrite
+
+- Complete product overview with creator + shopper value prop
+- Full design system with exact CSS variable values from WT v1 `globals.css`
+- Detailed layout specs for all 6 homepage sections (from WT v1 `app/page.tsx`)
+- Header spec (from WT v1 `components/layout/Header.tsx`)
+- Footer spec (from WT v1 `components/layout/Footer.tsx`)
+- Platform badge colors (all 11 platforms, from WT v1 `lib/config.ts`)
+- Business rules/constraints table
+- `landing_images` table slot definitions
+- Full build status table (✅ complete / ❌ pending with priorities)
+
+#### `02-ARCHITECTURE.md` — Full rewrite
+
+- WT v1 reference metadata table (repo RID, branch, fetch command, commit)
+- Updated WT v1 vs WT_2 stack mapping table
+- Full route map (14 routes) with WT v1 equivalents and auth requirements
+- Homepage sections table with PHP file, status, and WT v1 section ID
+- Header and footer specs (from WT v1 source)
+- Design tokens table (exact values from WT v1 `globals.css` — confirmed correct)
+- DB schema (4 tables + pending `landing_images`)
+- Full folder structure with WT v1 equivalents per file
+- Data flows: consumer storefront, creator publishing, homepage featured outfit
+- Out-of-stock logic (matches WT v1)
+- Auth flow (signup/login/protected routes)
+- Security measures table
+- Key architecture decisions with rationale
+- Deployment workflow
+
+#### `03-DEVELOPER-GUIDE.md` — Full rewrite
+
+- First-thing-every-session checklist with exact `git show wt/v1:...` commands
+- WT v1 reference guide: branch explanation, key files table
+- Complete Tailwind → PHP CSS translation table (30+ mappings)
+- Design tokens ready to copy into `styles.css `:root`
+- Config system documentation
+- PHP coding patterns (DB queries, output escaping, file paths, auth guards, CSRF, flash, image upload)
+- Common tasks (rename platform, change theme, add platform/category, add page, etc.)
+- Homepage section development guide with CSS structure
+- Deploy workflow
+- New feature checklist
+- Documentation maintenance rules (which docs to update for each change type)
+- Troubleshooting table (17 known issues with causes and fixes)
+- Configurable elements quick reference
+- Pending features table (from WT v1 — not yet in PHP)
+- Git remotes reference
+
+### No code changes this session — documentation only
+
+---
+
 ## [1.1.0] - 2026-05-11 - Homepage Rebuild + WT Reference Integration
 
 ### Summary
@@ -17,28 +92,31 @@ All colors, layout, spacing, and component structure now sourced directly from W
 - Established WT repo (`ri.stemma.main.repository.b2e8b5a3-4b79-4e84-ae4e-b75249b50c7a`) as official design/layout source of truth
 - Added `git remote add wt` workflow to fetch WT source directly
 - All future UI work starts with reading the relevant WT component first
+- ⚠️ Note: this session used `wt/master` (v0.5.1) — corrected to `wt/v1` in v1.2.0
 
-### Design System Changes (from WT globals.css)
+### Design System Changes (from WT `master` globals.css — see v1.2.0 correction)
 
-| Token                    | Old Value | New Value (WT) |
-| ------------------------ | --------- | -------------- |
-| `--color-background`     | `#FAF8F5` | `#0B0B0F`      |
-| `--color-surface`        | `#FFFFFF` | `#161618`      |
-| `--color-border`         | `#EDE9E3` | `#2A2A2E`      |
-| `--color-gold-accent`    | `#C9A96E` | `#D6B25E`      |
-| `--color-text-primary`   | `#1A1A1A` | `#F4EDE4`      |
-| `--color-text-secondary` | `#888888` | `#9A9490`      |
-| `--color-shop-btn-bg`    | `#1A1A1A` | `#D6B25E`      |
-| `--color-shop-btn-text`  | `#FFFFFF` | `#0B0B0F`      |
+| Token                    | Old Value | New Value (applied in v1.1) |
+| ------------------------ | --------- | --------------------------- |
+| `--color-background`     | `#FAF8F5` | `#0B0B0F`                   |
+| `--color-surface`        | `#FFFFFF` | `#161618`                   |
+| `--color-border`         | `#EDE9E3` | `#2A2A2E`                   |
+| `--color-gold-accent`    | `#C9A96E` | `#D6B25E`                   |
+| `--color-text-primary`   | `#1A1A1A` | `#F4EDE4`                   |
+| `--color-text-secondary` | `#888888` | `#9A9490`                   |
+| `--color-shop-btn-bg`    | `#1A1A1A` | `#D6B25E`                   |
+| `--color-shop-btn-text`  | `#FFFFFF` | `#0B0B0F`                   |
 
-### Header (matches WT Header.tsx)
+> ⚠️ Values above from `wt/master`. Correct v1 values: gold=`#C9A96E`, bg=`#0A0C14`, surface=`#12141E`. See v1.2.0.
+
+### Header (matches WT master Header.tsx)
 
 - Gold Playfair Display logo left-aligned
 - Text "Log in" + gold-outline "Join as Creator" button right
 - `border-b border-border bg-surface` dark theme
 - Removed 3-column nav — simplified to match WT
 
-### Homepage (matches WT page.tsx exactly)
+### Homepage (matches WT master page.tsx — pre-v1 layout)
 
 - **Hero:** `flex lg:flex-row`, left 38% / right 62%
   - Left: h1 "Monetize Your Taste.", "Build→Share→Earn", gold-outline CTA "Start for Free"
@@ -48,7 +126,7 @@ All colors, layout, spacing, and component structure now sourced directly from W
   - Left: "How it works" — numbered steps 01/02/03
   - Right: "Earnings potential" — ₹45,000/month + avatar stack
 
-### Footer (matches WT Footer.tsx)
+### Footer (matches WT master Footer.tsx — 2-col, pre-v1)
 
 - `border-t border-border bg-surface`
 - Gold brand name + tagline
