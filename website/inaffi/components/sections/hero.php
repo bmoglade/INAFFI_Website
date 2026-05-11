@@ -1,10 +1,11 @@
 <?php
 // ============================================================
-// SECTION: Hero
+// SECTION: Hero — Influra-style dark landing hero
 // ============================================================
-// Layout: 38/62 horizontal split
-//   Left  — headline, tagline, steps, CTA buttons
-//   Right — featured outfit card (from DB or fallback)
+// Left: eyebrow + large headline + subtitle + CTA button
+// Right: collage of 6 outfit images (admin-managed)
+// Bottom: italic tagline centered
+// ============================================================
 //
 // Variables expected (set in index.php before including):
 //   $creator          (array|null)  — logged-in creator or null
@@ -12,172 +13,86 @@
 //   $display_products (array)       — in-stock products for that outfit
 //   $use_fallback     (bool)        — true if using mockup data
 // ============================================================
+
+// Fetch admin-uploaded hero images (up to 6) from DB
+// stored as hero_images in a settings table OR from featured outfits
+$hero_images = [];
+try {
+    $stmt = get_db()->prepare('
+        SELECT o.image, o.title
+        FROM outfits o
+        WHERE o.is_published = 1
+          AND o.image IS NOT NULL
+          AND o.image != ""
+        ORDER BY o.is_featured DESC, o.updated_at DESC
+        LIMIT 6
+    ');
+    $stmt->execute();
+    $hero_images = $stmt->fetchAll();
+} catch (Exception $e) {
+    // silently fallback
+}
 ?>
 
-<section class="hero">
+<section class="hero-dark">
     <div class="container">
+        <div class="hero-dark__inner">
 
         <!-- ── LEFT: Text content ─────────────────────────── -->
-        <div class="hero__content animate-fade-in-up">
+            <div class="hero-dark__content">
 
-            <p class="hero__eyebrow">India's Creator Storefront</p>
+                <p class="hero-dark__eyebrow">INDIA'S #1 CREATOR PLATFORM</p>
+                <h1 class="hero-dark__title">
+                    Monetize<br>Your Taste
+                </h1>
 
-            <h1 class="hero__title">
-                Your Outfits.<br>
-                One Link.<br>
-                <span style="color:var(--color-gold-accent);">Shop Everything.</span>
-            </h1>
+                <p class="hero-dark__subtitle">
+                    Create, influence, and earn —<br>all in one place.
+                </p>
 
-            <p class="hero__tagline">
-                "From Instagram to checkout in under 30 seconds."
-            </p>
-
-            <p class="hero__steps">
-                Build &rarr; Share &rarr; Earn
-            </p>
-
-            <div class="hero__actions">
+                <div class="hero-dark__actions">
                 <?php if ($creator): ?>
-                    <a href="<?= site_url('dashboard') ?>" class="btn btn--primary btn--lg">
-                        Go to Dashboard
+                        <a href="<?= site_url('dashboard') ?>" class="btn btn--hero-cta">
+                            GO TO DASHBOARD
                     </a>
-                    <a href="<?= site_url($creator['username']) ?>" class="btn btn--outline btn--lg">
-                        My Storefront ↗
-                    </a>
-                <?php else: ?>
-                    <a href="<?= site_url('signup') ?>" class="btn btn--primary btn--lg">
-                        Join as Creator — Free
-                    </a>
-                    <a href="<?= site_url('login') ?>" class="btn btn--outline btn--lg">
-                        Log in
+                    <?php else: ?>
+                        <a href="<?= site_url('signup') ?>" class="btn btn--hero-cta">
+                            JOIN INAFFI
                     </a>
                 <?php endif; ?>
+                </div>
             </div>
 
-        </div>
-
-        <!-- ── RIGHT: Featured outfit card ──────────────────── -->
-        <div class="hero__outfit animate-fade-in-up delay-2">
-
-            <?php if ($display_outfit): ?>
-
+            <!-- ── RIGHT: Outfit image collage ──────────────────── -->
+            <div class="hero-dark__collage">
                 <?php
-                $has_img  = !empty($display_outfit['image']);
-                $img_url  = $has_img ? site_url($display_outfit['image']) : '';
-                $out_user = $use_fallback ? '' : ($display_outfit['username'] ?? '');
+                // 6 slots — use DB images or placeholder boxes
+                $slots = 6;
+                for ($i = 0; $i < $slots; $i++):
+                    $img = $hero_images[$i] ?? null;
                 ?>
-
-                <div class="outfit-card" style="box-shadow:var(--shadow-lg);">
-
-                    <!-- Outfit image -->
-                    <div class="outfit-card__image-wrap">
-                        <?php if ($has_img): ?>
+                <div class="hero-collage__item hero-collage__item--<?= $i + 1 ?>">
+                    <?php if ($img && !empty($img['image'])): ?>
                             <img
-                                src="<?= e($img_url) ?>"
-                                alt="<?= e($display_outfit['title']) ?>"
-                                class="outfit-card__image"
-                                loading="eager"
+                            src="<?= e(site_url($img['image'])) ?>"
+                            alt="<?= e($img['title'] ?? 'Fashion look') ?>"
+                            loading="<?= $i < 2 ? 'eager' : 'lazy' ?>"
                             >
                         <?php else: ?>
-                            <div class="outfit-card__image-placeholder">🧥</div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($display_outfit['category'])): ?>
-                            <span class="outfit-card__category">
-                                <?= e($display_outfit['category']) ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- Products -->
-                    <div class="outfit-card__body">
-
-                        <h3 class="outfit-card__title">
-                            <?= e($display_outfit['title']) ?>
-                        </h3>
-
-                        <div class="outfit-card__products">
-                            <?php foreach ($display_products as $product): ?>
-                                <?php if (empty($product['in_stock'])) continue; ?>
-                                <div class="product-item">
-
-                                    <div style="flex-shrink:0;">
-                                        <?php
-                                        if (!empty($product['image'])) {
-                                            echo '<img'
-                                                . ' src="' . e(site_url($product['image'])) . '"'
-                                                . ' alt="' . e($product['name']) . '"'
-                                                . ' class="product-item__img" loading="lazy"'
-                                                . ' onerror="this.style.display=\'none\'"'
-                                                . '>';
-                                        } else {
-                                            render_platform_logo($product['platform'], 48);
-                                        }
-                                        ?>
-                                    </div>
-
-                                    <div class="product-item__info">
-                                        <p class="product-item__name">
-                                            <?= e(truncate($product['name'], 50)) ?>
-                                        </p>
-                                        <?php render_platform_badge($product['platform']); ?>
-                                    </div>
-
-                                    <?php if (!$use_fallback && !empty($product['id'])): ?>
-                                        <a
-                                            href="<?= site_url('go?p=' . (int)$product['id']) ?>"
-                                            class="btn btn--shop"
-                                            target="_blank"
-                                            rel="noopener noreferrer nofollow"
-                                        >Shop ↗</a>
-                                    <?php else: ?>
-                                        <span class="btn btn--shop"
-                                            style="opacity:0.5;cursor:default;">
-                                            Shop ↗
-                                        </span>
-                                    <?php endif; ?>
-
-                                </div>
-                            <?php endforeach; ?>
+                        <div class="hero-collage__placeholder">
+                            <span>🧥</span>
                         </div>
-
-                        <?php if ($out_user): ?>
-                            <div class="outfit-card__footer">
-                                <a
-                                    href="<?= site_url(e($out_user)) ?>"
-                                    style="color:var(--color-gold-accent);font-weight:500;"
-                                >View full storefront →</a>
-                            </div>
                         <?php endif; ?>
-
                     </div>
-                </div>
+                <?php endfor; ?>
+                                    </div>
 
-            <?php else: ?>
+                                    </div>
 
-                <!-- No outfit at all — placeholder CTA card -->
-                <div style="
-                    background:var(--color-surface);
-                    border:2px dashed var(--color-border);
-                    border-radius:8px;
-                    padding:48px 32px;
-                    text-align:center;
-                ">
-                    <p style="font-size:3rem;margin-bottom:16px;">🧥</p>
-                    <h3 style="font-family:var(--font-display);margin-bottom:8px;">
-                        Your Outfit, Here
-                    </h3>
-                    <p style="color:var(--color-text-secondary);margin-bottom:24px;">
-                        Create an account and feature your first look on this homepage.
+        <!-- ── Bottom tagline ─────────────────────────── -->
+        <p class="hero-dark__tagline">
+            A luxury creator platform designed to turn influence into income.
                     </p>
-                    <a href="<?= site_url('signup') ?>" class="btn btn--gold">
-                        Get Started Free
-                    </a>
                 </div>
-
-            <?php endif; ?>
-
-        </div>
-
-    </div>
 </section>
+

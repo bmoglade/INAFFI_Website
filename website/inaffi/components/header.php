@@ -14,8 +14,10 @@ if (!isset($title))   $title   = SITE_NAME;
 if (!isset($creator)) $creator = is_logged_in() ? get_current_creator() : null;
 
 // Is the current page the storefront (no dashboard link in header)?
-$is_dashboard = str_starts_with($_SERVER['REQUEST_URI'], '/dashboard');
-$is_admin     = str_starts_with($_SERVER['REQUEST_URI'], '/admin');
+$is_homepage  = ($_SERVER['REQUEST_URI'] === '/' || $_SERVER['REQUEST_URI'] === '/website/inaffi/' || $_SERVER['REQUEST_URI'] === '/website/inaffi/index.php');
+$is_dashboard = str_starts_with($_SERVER['REQUEST_URI'], '/website/inaffi/dashboard') || str_starts_with($_SERVER['REQUEST_URI'], '/dashboard');
+$is_admin     = str_starts_with($_SERVER['REQUEST_URI'], '/website/inaffi/admin') || str_starts_with($_SERVER['REQUEST_URI'], '/admin');
+$dark_header  = $is_homepage; // dark nav on homepage only
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +32,7 @@ $is_admin     = str_starts_with($_SERVER['REQUEST_URI'], '/admin');
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="<?= site_url('assets/css/styles.css') ?>">
@@ -40,30 +42,56 @@ $is_admin     = str_starts_with($_SERVER['REQUEST_URI'], '/admin');
 
     <?php if (isset($extra_head)) echo $extra_head; ?>
 </head>
-<body>
+<body<?php
+  // detect homepage by checking if we are serving index.php at root
+  $req = strtok($_SERVER['REQUEST_URI'], '?');
+  $is_home_body = in_array(rtrim($req,'/'), ['', '/website/inaffi', '/website/inaffi/index.php']);
+  if ($is_home_body) echo ' class="page-home"';
+?>>
 
 <?php render_flash(); ?>
 
-<header class="site-header">
+<header class="site-header <?= $dark_header ? 'site-header--dark' : '' ?>">
     <div class="container">
 
-        <!-- Logo -->
+        <!-- Left nav -->
+        <nav class="site-header__nav-left" aria-label="Left navigation">
+            <?php if ($creator && ($is_dashboard || $is_admin)): ?>
+                <!-- dashboard/admin — nothing on left -->
+            <?php else: ?>
+                <a href="<?= site_url('about') ?>">About us</a>
+                <span class="nav-divider">|</span>
+                <a href="<?= site_url('shop') ?>">Shop</a>
+                <span class="nav-divider">|</span>
+                <a href="<?= site_url('creators') ?>">Creators</a>
+            <?php endif; ?>
+        </nav>
+
+        <!-- Centre: Logo -->
         <a href="<?= site_url() ?>" class="site-header__logo">
-            <?= e(SITE_NAME) ?>
+            <?php
+            $logo_path = site_url('assets/images/logo.png');
+            $logo_file = rtrim(dirname(__DIR__), '/') . '/assets/images/logo.png';
+            if (file_exists($logo_file)):
+            ?>
+                <img src="<?= e($logo_path) ?>" alt="<?= e(SITE_NAME) ?>" class="site-header__logo-img">
+            <?php else: ?>
+                <span class="site-header__logo-text"><?= e(SITE_NAME) ?></span>
+            <?php endif; ?>
         </a>
 
-        <!-- Navigation — changes based on login state -->
-        <nav class="site-header__nav" aria-label="Main navigation">
+        <!-- Right nav — changes based on login state -->
+        <nav class="site-header__nav-right" aria-label="Right navigation">
             <?php if ($creator): ?>
                 <!-- Logged in -->
                 <?php if (!$is_dashboard && !$is_admin): ?>
-                    <a href="<?= site_url('dashboard') ?>">← Dashboard</a>
+                    <a href="<?= site_url('dashboard') ?>" class="btn btn--outline-light btn--sm">Dashboard</a>
                 <?php endif; ?>
-                <a href="<?= site_url('logout') ?>" class="btn btn--outline btn--sm">Log Out</a>
+                <a href="<?= site_url('logout') ?>" class="<?= $dark_header ? 'nav-link-light' : '' ?>">Log out</a>
             <?php else: ?>
                 <!-- Logged out -->
-                <a href="<?= site_url('login') ?>" class="btn btn--outline btn--sm">Log in</a>
-                <a href="<?= site_url('signup') ?>" class="btn btn--primary btn--sm">Join as Creator</a>
+                <a href="<?= site_url('signup') ?>" class="btn btn--outline-light btn--sm">Join as creator</a>
+                <a href="<?= site_url('login') ?>" class="<?= $dark_header ? 'nav-link-light' : 'nav-link' ?>">Log in</a>
             <?php endif; ?>
         </nav>
 
@@ -71,3 +99,4 @@ $is_admin     = str_starts_with($_SERVER['REQUEST_URI'], '/admin');
 </header>
 
 <main>
+
