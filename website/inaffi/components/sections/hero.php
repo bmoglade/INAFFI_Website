@@ -10,20 +10,22 @@
 // ============================================================
 
 $hero_images = [];
-try {
-    $stmt = get_db()->prepare('
-        SELECT o.image, o.title
-        FROM   outfits o
-        WHERE  o.is_published = 1
-          AND  o.image IS NOT NULL
-          AND  o.image != ""
-        ORDER  BY o.is_featured DESC, o.updated_at DESC
-        LIMIT  6
-    ');
-    $stmt->execute();
-    $hero_images = $stmt->fetchAll();
-} catch (Exception $e) {
-    // silently fallback to placeholders
+if (db_available()) {
+    try {
+        $stmt = get_db()->prepare('
+            SELECT o.image, o.title
+            FROM   outfits o
+            WHERE  o.is_published = 1
+              AND  o.image IS NOT NULL
+              AND  o.image != ""
+            ORDER  BY o.is_featured DESC, o.updated_at DESC
+            LIMIT  6
+        ');
+        $stmt->execute();
+        $hero_images = $stmt->fetchAll();
+    } catch (Exception $e) {
+        // silently fallback to placeholders
+    }
 }
 ?>
 

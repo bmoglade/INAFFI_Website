@@ -15,26 +15,27 @@
 
 // Fetch up to 3 creators who have at least 1 published outfit
 $showcase_creators = [];
-try {
-    $stmt = get_db()->prepare('
-        SELECT c.username, c.display_name, c.bio,
-               c.profile_image, c.instagram_handle,
-               COUNT(o.id) AS outfit_count
-        FROM   creators c
-        JOIN   outfits  o ON o.creator_id = c.id AND o.is_published = 1
-        GROUP  BY c.id
-        HAVING outfit_count >= 1
-        ORDER  BY outfit_count DESC
-        LIMIT  3
-    ');
-    $stmt->execute();
-    $showcase_creators = $stmt->fetchAll();
-} catch (Exception $e) {
-    // Silently fall back to empty
-    $showcase_creators = [];
+if (db_available()) {
+    try {
+        $stmt = get_db()->prepare('
+            SELECT c.username, c.display_name, c.bio,
+                   c.profile_image, c.instagram_handle,
+                   COUNT(o.id) AS outfit_count
+            FROM   creators c
+            JOIN   outfits  o ON o.creator_id = c.id AND o.is_published = 1
+            GROUP  BY c.id
+            HAVING outfit_count >= 1
+            ORDER  BY outfit_count DESC
+            LIMIT  3
+        ');
+        $stmt->execute();
+        $showcase_creators = $stmt->fetchAll();
+    } catch (Exception $e) {
+        $showcase_creators = [];
+    }
 }
 
-// Don't show section if no creators AND no fallback desired
+// Don't show section if no creators (local dev without DB — section simply hidden)
 if (empty($showcase_creators)) return;
 ?>
 
