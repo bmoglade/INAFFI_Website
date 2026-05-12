@@ -36,11 +36,28 @@ function get_db(): PDO {
             ]);
         } catch (PDOException $e) {
             // Log error but never expose credentials to browser
+            // In local dev (no DB) — set $pdo to false so callers can check
             error_log('[inaffi DB] Connection failed: ' . $e->getMessage());
-            http_response_code(500);
-            die('Database connection failed. Please try again later.');
+            $pdo = false;
         }
     }
 
-    return $pdo;
+    // Return false if connection failed (local dev with no DB)
+    return $pdo ?: null;
+}
+
+/**
+ * Returns true if a DB connection is available.
+ * Use this to gracefully skip DB calls in local dev.
+ */
+function db_available(): bool {
+    static $checked = null;
+    if ($checked !== null) return $checked;
+    try {
+        get_db();
+        $checked = get_db() !== null;
+    } catch (Exception $e) {
+        $checked = false;
+    }
+    return $checked;
 }

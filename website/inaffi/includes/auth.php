@@ -74,6 +74,8 @@ function get_current_creator(): ?array {
 
     require_once __DIR__ . '/db.php';
 
+    if (!db_available()) return null;
+
     $stmt = get_db()->prepare('SELECT * FROM creators WHERE id = ? LIMIT 1');
     $stmt->execute([(int) $_SESSION['creator_id']]);
     $creator = $stmt->fetch() ?: null;
