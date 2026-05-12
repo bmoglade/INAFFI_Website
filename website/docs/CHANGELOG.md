@@ -5,6 +5,26 @@
 
 ---
 
+## [1.3.0] - 2026-05-12 - Documentation Rebuilt Clean (All 4 Files)
+
+### Summary
+
+All four documentation files fully rebuilt from scratch as clean, properly-formatted Markdown.
+Previous versions had been corrupted — `02-ARCHITECTURE.md` was reduced to a single line,
+`00-SESSION-START-PROMPT.md` and `01-MASTER-PROMPT.md` contained AI meta-commentary instead
+of actual content. All files are now correct, complete, and properly committed.
+
+### Files Rebuilt
+
+- `00-SESSION-START-PROMPT.md` — 162 lines: role, WT v1 reference, project quick-start, build status, session rules, example prompts
+- `01-MASTER-PROMPT.md` — 318 lines: product overview, full design system, all 6 section specs (with WT v1 detail), header/footer specs, platform colors, business rules, build status
+- `02-ARCHITECTURE.md` — 400 lines: WT mapping, route map, section status, header/footer specs, design tokens, DB schema, folder tree, data flows, auth, security, deployment
+- `03-DEVELOPER-GUIDE.md` — 399 lines: WT v1 reading guide, Tailwind→CSS translation, design tokens, PHP patterns, common tasks, section guide, deploy, troubleshooting (17 items), pending features
+
+### No code changes this session — documentation only
+
+---
+
 ## [1.2.0] - 2026-05-11 - Full Documentation Overhaul (WT v1 Aligned)
 
 ### Summary
