@@ -74,6 +74,8 @@ function get_current_creator(): ?array {
 
     require_once __DIR__ . '/db.php';
 
+    // On live server db_available() is always true.
+    // On local dev with no MySQL — return null (no session lookup possible).
     if (!db_available()) return null;
 
     $stmt = get_db()->prepare('SELECT * FROM creators WHERE id = ? LIMIT 1');
